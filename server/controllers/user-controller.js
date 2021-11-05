@@ -16,6 +16,54 @@ getLoggedIn = async (req, res) => {
     })
 }
 
+loginUser = async (req, res) => {
+    try {
+        const enteredEmail = req.body.email
+        const enteredPassword = req.body.password
+        console.log('email=' + enteredEmail)
+        console.log('password=' + enteredPassword)
+
+        if (!enteredEmail || !enteredPassword) {
+            return res
+                .status(400)
+                .json({ errorMessage: "Please enter all required fields" })
+        }
+
+        const user = await User.findOne({ email: enteredEmail });
+
+        const salt = await bcrypt.getSalt(user.passwordHash);
+        const passwordHash = await bcrypt.hash(enteredPassword, salt);
+
+        if (passwordHash == user.passwordHash) {
+            console.log('success!')
+            const token = auth.signToken(user);
+
+            await res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none"
+            }).status(200).json({
+                success: true,
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email
+                }
+            }).send();
+        } else {
+            console.log('Password is invalid!')
+            return res.status(400)
+                .json({
+                    errorMessage: 'Password is invalid!'
+                })
+        }
+    } catch (err) {
+        console.log('shit man')
+        console.log(err)
+        res.status(500).send();
+    }
+}
+
 registerUser = async (req, res) => {
     try {
         const { firstName, lastName, email, password, passwordVerify } = req.body;
@@ -51,7 +99,6 @@ registerUser = async (req, res) => {
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(password, salt);
-
         const newUser = new User({
             firstName, lastName, email, passwordHash
         });
@@ -80,5 +127,6 @@ registerUser = async (req, res) => {
 
 module.exports = {
     getLoggedIn,
+    loginUser,
     registerUser
 }
