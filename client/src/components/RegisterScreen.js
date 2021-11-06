@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import AuthContext from '../auth'
 import Copyright from './Copyright'
 import Avatar from '@mui/material/Avatar';
@@ -12,10 +12,18 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GlobalStoreContext } from '../store'
+import ErrorDialog from './ErrorDialog'
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext)
+
+    const [errMsg, setErrMsg] = useState('');
+    const [showAlert, setShowAlert] = useState(false)
+
+    const handleCloseDialog = () => {
+        setShowAlert(false)
+      }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -26,11 +34,17 @@ export default function RegisterScreen() {
             email: formData.get('email'),
             password: formData.get('password'),
             passwordVerify: formData.get('passwordVerify')
-        }, store);
+        }, store).then(value => {
+            if (value) {
+                setErrMsg(value)
+                setShowAlert(true)
+            }
+        })
     };
 
     return (
             <Container component="main" maxWidth="xs">
+                <ErrorDialog showAlert={showAlert} errMsg={errMsg} handleCloseDialog={handleCloseDialog} />
                 <CssBaseline />
                 <Box
                     sx={{

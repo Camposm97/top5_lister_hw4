@@ -59,28 +59,29 @@ function AuthContextProvider(props) {
 
     auth.loginUser = async function (payload, store) {
         try {
-            const response = await api.loginUser(payload)
-            console.log('response=' + response)
-            if (response.status === 200) {
+            const res = await api.loginUser(payload)
+            if (res.status === 200) {
                 console.log('happy boi :)');
                 history.push('/')
                 authReducer({
                     type: AuthActionType.SET_LOGGED_IN,
                     payload: {
-                        user: response.data.user,
+                        user: res.data.user,
                         loggedIn: true
                     }
                 })
                 store.loadIdNamePairs()
-            } else {
-                console.log('sad boi :(')
             }
+            return ''
         } catch (err) {
-            console.log('Failed to login...\n' + err)
+            if (err.response.status === 400) {
+                return err.response.data.errorMessage
+            }
+            return null;
         }
     }
 
-    auth.logoutUser = async function() {
+    auth.logoutUser = async function () {
         console.log('logging out user...')
         api.logoutUser()
         authReducer({
@@ -118,11 +119,13 @@ function AuthContextProvider(props) {
                 })
                 history.push("/");
                 store.loadIdNamePairs();
-            } else {
-                console.log('depressed boi :((((')
             }
+            return ''
         } catch (err) {
-            console.log(err)
+            if (err.response.status === 400) {
+                return err.response.data.errorMessage
+            }
+            return null
         }
     }
 
