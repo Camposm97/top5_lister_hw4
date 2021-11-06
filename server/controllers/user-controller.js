@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 getLoggedIn = async (req, res) => {
     auth.verify(req, res, async function () {
         const loggedInUser = await User.findOne({ _id: req.userId });
+        console.log('loggedInUser=' + loggedInUser)
         return res.status(200).json({
             loggedIn: true,
             user: {
@@ -62,6 +63,14 @@ loginUser = async (req, res) => {
         console.log(err)
         res.status(500).send();
     }
+}
+
+logoutUser = async (res) => {
+    console.log('logging out user!')
+    return res.status(200).json({
+        loggedIn: false,
+        user: null
+    }).send()
 }
 
 registerUser = async (req, res) => {
@@ -128,5 +137,6 @@ registerUser = async (req, res) => {
 module.exports = {
     getLoggedIn,
     loginUser,
+    logoutUser,
     registerUser
 }
