@@ -33,7 +33,7 @@ export default function SignIn() {
 
     auth.loginUser({
       email: formData.get('email'),
-      password: formData.get('password')
+      password: formData.get('password'),
     }, store).then(value => {
       if (value) {
         setErrMsg(value)

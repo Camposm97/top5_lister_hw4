@@ -1,10 +1,10 @@
-import { RssFeed } from "@mui/icons-material";
 import React, { createContext, useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom'
 import api from '../api'
+import {getCookie, setCookie} from '../util/Cookies'
 
 const AuthContext = createContext();
-console.log("create AuthContext: " + AuthContext);
+// console.log("create AuthContext: " + AuthContext);
 
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR AUTH STATE THAT CAN BE PROCESSED
 export const AuthActionType = {
@@ -22,7 +22,11 @@ function AuthContextProvider(props) {
     const history = useHistory();
 
     useEffect(() => {
-        auth.getLoggedIn();
+        let loggedIn = getCookie('loggedIn')
+        console.log('effect:loggedIn=' + loggedIn)
+        if (loggedIn) {
+            auth.getLoggedIn();
+        }
     }, []);
 
     const authReducer = (action) => {
@@ -35,12 +39,14 @@ function AuthContextProvider(props) {
                 });
             }
             case AuthActionType.SET_LOGGED_IN: {
+                setCookie('loggedIn', true, 2)
                 return setAuth({
                     user: payload.user,
                     loggedIn: true
                 })
             }
             case AuthActionType.SET_LOGGED_OUT: {
+                setCookie('loggedIn', '', 2)
                 return setAuth({
                     user: null,
                     loggedIn: false
@@ -61,7 +67,6 @@ function AuthContextProvider(props) {
         try {
             const res = await api.loginUser(payload)
             if (res.status === 200) {
-                console.log('happy boi :)');
                 history.push('/')
                 authReducer({
                     type: AuthActionType.SET_LOGGED_IN,
