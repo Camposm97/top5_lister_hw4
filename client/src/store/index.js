@@ -224,7 +224,6 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
-        console.log('loading list id name pairs for ' + auth.user.email)
         const response = await api.getTop5ListPairs({
             owner: auth.user.email
         });
@@ -330,6 +329,8 @@ function GlobalStoreContextProvider(props) {
 
     store.updateItem = function (index, newItem) {
         store.currentList.items[index] = newItem;
+
+        // NOW MAKE IT OFFICIAL
         store.updateCurrentList();
     }
 
