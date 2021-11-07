@@ -21,8 +21,6 @@ loginUser = async (req, res) => {
     try {
         const enteredEmail = req.body.email
         const enteredPassword = req.body.password
-        console.log('email=' + enteredEmail)
-        console.log('password=' + enteredPassword)
 
         if (!enteredEmail || !enteredPassword) {
             return res
@@ -31,12 +29,11 @@ loginUser = async (req, res) => {
         }
 
         const user = await User.findOne({ email: enteredEmail });
-
         const salt = await bcrypt.getSalt(user.passwordHash);
         const passwordHash = await bcrypt.hash(enteredPassword, salt);
 
         if (passwordHash == user.passwordHash) {
-            console.log('success!')
+            console.log("logging in user: " + user.email)
             const token = auth.signToken(user);
 
             await res.cookie("token", token, {
@@ -52,25 +49,26 @@ loginUser = async (req, res) => {
                 }
             }).send();
         } else {
-            console.log('Password is invalid!')
             return res.status(400)
                 .json({
                     errorMessage: 'Password is invalid!'
                 })
         }
     } catch (err) {
-        console.log('shit man')
-        console.log(err)
         res.status(500).send();
     }
 }
 
-logoutUser = async (res) => {
-    console.log('logging out user!')
-    return res.status(200).json({
-        loggedIn: false,
-        user: null
-    }).send()
+logoutUser = async (req, res) => {
+    try {
+        console.log('Logging out user!')
+        return res.status(200).json({
+            loggedIn: false,
+            user: null
+        }).send()
+    } catch (err) {
+        res.status(500).send()
+    }
 }
 
 registerUser = async (req, res) => {
@@ -129,7 +127,6 @@ registerUser = async (req, res) => {
             }
         }).send();
     } catch (err) {
-        console.error(err);
         res.status(500).send();
     }
 }

@@ -75,7 +75,6 @@ function AuthContextProvider(props) {
                         loggedIn: true
                     }
                 })
-                store.loadIdNamePairs()
             }
             return ''
         } catch (err) {
@@ -89,6 +88,7 @@ function AuthContextProvider(props) {
     auth.logoutUser = async function () {
         console.log('logging out user...')
         api.logoutUser()
+        history.push('/')
         authReducer({
             type: AuthActionType.SET_LOGGED_OUT
         })

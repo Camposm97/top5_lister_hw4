@@ -208,7 +208,7 @@ function GlobalStoreContextProvider(props) {
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email
+            owner: auth.user.email
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -230,7 +230,10 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
-        const response = await api.getTop5ListPairs();
+        console.log('loading list id name pairs for ' + auth.user.email)
+        const response = await api.getTop5ListPairs({
+            owner: auth.user.email
+        });
         if (response.data.success) {
             let pairsArray = response.data.idNamePairs;
             storeReducer({
