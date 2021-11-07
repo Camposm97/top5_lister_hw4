@@ -7,13 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-/*
-    This is a card in our list of top 5 lists. It lets select
-    a list for editing and it has controls for changing its 
-    name or deleting it.
-    
-    @author McKilla Gorilla
-*/
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
@@ -22,7 +15,6 @@ function ListCard(props) {
 
     function handleLoadList(event, id) {
         if (!event.target.disabled) {
-            // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
         }
     }
@@ -42,7 +34,10 @@ function ListCard(props) {
 
     async function handleDeleteList(event, id) {
         event.stopPropagation();
-        store.markListForDeletion(id);
+        store.markListForDeletion(id).then(() => {
+            props.setShowAlertCallback(true)
+            props.setListNameCallback(idNamePair.name)
+        })
     }
 
     function handleKeyPress(event) {

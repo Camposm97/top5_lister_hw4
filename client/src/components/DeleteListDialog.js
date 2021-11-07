@@ -5,34 +5,19 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import GlobalStoreContext from '../store';
 import { SlideDownTransition } from '../util/CamposAnims'
 
-const errTitles = [
-    "Uh oh.  Something went wrong...", 
-    "I didn't do it! I swear!",
-    "Oh no! I am error!", 
-    "You broke my program!", 
-    "I let you down. Sorry :(", 
-    "I'm not suppose to be here...",
-    "This doesn't make any sense!", 
-    "You found me! :D", 
-    "Hello! I'm a message for your error :)",
-    "ERROR ERROR ERROR", 
-    "Aw geez, this wasn't suppose to happen!", 
-    "Woopsy daisy!", "My bad.",
-    "I didn't do it! I swear!"
-]
+export default function DeleteListDialog(props) {
+    const { store } = React.useContext(GlobalStoreContext)
 
-let errTitle = null
+    function closeDialog() {
+        props.setShowAlertCallback(false)
+    }
 
-function initErrTitle() {
-    return errTitles[Math.floor(Math.random() * errTitles.length)]
-}
-
-export default function ErrorDialog(props) {
-
-    if (props.showAlert) {
-        errTitle = initErrTitle()
+    function deleteList() {
+        props.setShowAlertCallback(false)
+        store.deleteMarkedList()
     }
 
     return (
@@ -44,15 +29,16 @@ export default function ErrorDialog(props) {
                 TransitionComponent={SlideDownTransition}
             >
                 <DialogTitle id="alert-dialog-title">
-                    {errTitle}
+                    {"Confirmation"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-desc">
-                        {props.errMsg}
+                        {'Are you sure you want delete Top 5 ' + props.name + ' List?'}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.handleCloseDialog}>Ok</Button>
+                    <Button onClick={deleteList} >Confirm</Button>
+                    <Button onClick={closeDialog} >Cancel</Button>
                 </DialogActions>
             </Dialog>
         </div>

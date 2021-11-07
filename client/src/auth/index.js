@@ -4,7 +4,6 @@ import api from '../api'
 import {getCookie, setCookie} from '../util/Cookies'
 
 const AuthContext = createContext();
-// console.log("create AuthContext: " + AuthContext);
 
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR AUTH STATE THAT CAN BE PROCESSED
 export const AuthActionType = {
