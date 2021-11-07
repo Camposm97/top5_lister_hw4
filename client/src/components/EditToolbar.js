@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import Button from '@mui/material/Button';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -12,41 +12,52 @@ import CloseIcon from '@mui/icons-material/HighlightOff';
     @author McKilla Gorilla
 */
 function EditToolbar() {
-    const { store } = useContext(GlobalStoreContext);
+    const { store } = useContext(GlobalStoreContext)
 
     function handleUndo() {
-        store.undo();
+        store.undo()
     }
     function handleRedo() {
-        store.redo();
+        store.redo()
     }
     function handleClose() {
         store.closeCurrentList();
     }
-    let editStatus = false;
-    if (store.isListNameEditActive) {
-        editStatus = true;
-    }  
+    // let undoStatus = false
+    // if (store.undoDisabled) {
+    //     undoStatus = true
+    // }
+    // let redoStatus = false
+    // if (store.redoDisabled) {
+    //     redoStatus = true
+    // }
+    let editStatus = false
+    if (store.isItemEditActive) {
+        editStatus = true
+    }
+    // console.log('undo=' + undoStatus + ', redo=' + redoStatus)
     return (
         <div id="edit-toolbar">
-            <Button 
+            <Button
                 id='undo-button'
+                disabled={!store.canUndo() || editStatus}
                 onClick={handleUndo}
                 variant="contained">
-                    <UndoIcon />
+                <UndoIcon />
             </Button>
-            <Button 
+            <Button
                 id='redo-button'
+                disabled={!store.canRedo() || editStatus}
                 onClick={handleRedo}
                 variant="contained">
-                    <RedoIcon />
+                <RedoIcon />
             </Button>
-            <Button 
+            <Button
                 disabled={editStatus}
                 id='close-button'
                 onClick={handleClose}
                 variant="contained">
-                    <CloseIcon />
+                <CloseIcon />
             </Button>
         </div>
     )

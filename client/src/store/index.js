@@ -20,7 +20,7 @@ export const GlobalStoreActionType = {
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE"
+    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -36,7 +36,7 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listNameActive: false,
         itemActive: false,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
     });
     const history = useHistory();
 
@@ -67,7 +67,7 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
                 })
             }
             // CREATE A NEW LIST
@@ -122,7 +122,7 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
                 });
             }
             // START EDITING A LIST ITEM
@@ -166,7 +166,7 @@ function GlobalStoreContextProvider(props) {
                 response = await api.updateTop5ListById(top5List._id, top5List);
                 if (response.data.success) {
                     async function getListPairs(top5List) {
-                        response = await api.getTop5ListPairs({owner: auth.user.email});
+                        response = await api.getTop5ListPairs({ owner: auth.user.email });
                         if (response.data.success) {
                             let pairsArray = response.data.idNamePairs;
                             storeReducer({
@@ -191,7 +191,6 @@ function GlobalStoreContextProvider(props) {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
-        
         tps.clearAllTransactions();
         history.push("/");
     }
@@ -242,7 +241,6 @@ function GlobalStoreContextProvider(props) {
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
     // OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
     // FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
-    // showDeleteListModal, and hideDeleteListModal
     store.markListForDeletion = async function (id) {
         // GET THE LIST
         let response = await api.getTop5ListById(id);
@@ -352,11 +350,11 @@ function GlobalStoreContextProvider(props) {
         tps.doTransaction();
     }
 
-    store.canUndo = function() {
+    store.canUndo = function () {
         return tps.hasTransactionToUndo();
     }
 
-    store.canRedo = function() {
+    store.canRedo = function () {
         return tps.hasTransactionToRedo();
     }
 

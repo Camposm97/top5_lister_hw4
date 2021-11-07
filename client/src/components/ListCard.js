@@ -97,7 +97,7 @@ function ListCard(props) {
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
-                inputProps={{ style: { fontSize: 48 } }}
+                InputProps={{ style: { fontSize: 48 } }}
                 InputLabelProps={{ style: { fontSize: 24 } }}
                 autoFocus
             />

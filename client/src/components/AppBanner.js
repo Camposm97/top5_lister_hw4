@@ -29,6 +29,11 @@ export default function AppBanner() {
     const handleLogout = () => {
         handleMenuClose();
         auth.logoutUser();
+        store.closeCurrentList()
+    }
+
+    const handleTop5L = () => {
+        store.closeCurrentList()
     }
 
     const menuId = 'primary-search-account-menu';
@@ -98,7 +103,8 @@ export default function AppBanner() {
                         variant="h4"
                         noWrap
                         component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}                        
+                        sx={{ display: { xs: 'none', sm: 'block' } }}     
+                        onClick={handleTop5L}                  
                     >
                         <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sup>5</sup>L</Link>
                     </Typography>

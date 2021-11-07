@@ -126,7 +126,7 @@ function Top5Item(props) {
                 onKeyPress={handleKeyPress}
                 defaultValue={props.text}
                 InputProps={{ style: { fontSize: 48 } }}
-                InputLabelProps={{ style: { fontSize: 18 } }}
+                InputLabelProps={{ style: { fontSize: 24 } }}
                 autoFocus
             />
     }
