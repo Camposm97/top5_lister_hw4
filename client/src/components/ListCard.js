@@ -10,7 +10,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
-    const [text, setText] = useState("");
     const { idNamePair } = props;
 
     function handleLoadList(event, id) {
@@ -42,19 +41,19 @@ function ListCard(props) {
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            if (text !== '') {
-                let id = event.target.id.substring("list-".length);
-                store.changeListName(id, text);
+            let newText = event.target.value
+            if (newText === '') {
+                newText = 'Untitled'
             }
+            let id = event.target.id.substring("list-".length);
+            store.changeListName(id, newText);
             toggleEdit();
         }
-    }
-    function handleUpdateText(event) {
-        setText(event.target.value);
     }
 
     let cardElement =
         <ListItem
+            disabled={store.isListNameEditActive}
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{ marginTop: '15px', display: 'flex', p: 1 }}
@@ -70,14 +69,20 @@ function ListCard(props) {
         >
             <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
             <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                <IconButton
+                    // disabled={store.isListNameEditActive}
+                    onClick={handleToggleEdit}
+                    aria-label='edit'>
                     <EditIcon style={{ fontSize: '48pt' }} />
                 </IconButton>
             </Box>
             <Box sx={{ p: 1 }}>
-                <IconButton onClick={(event) => {
-                    handleDeleteList(event, idNamePair._id)
-                }} aria-label='delete'>
+                <IconButton
+                    // disabled={store.isListNameEditActive}
+                    onClick={(event) => {
+                        handleDeleteList(event, idNamePair._id)
+                    }}
+                    aria-label='delete'>
                     <DeleteIcon style={{ fontSize: '48pt' }} />
                 </IconButton>
             </Box>
@@ -95,7 +100,6 @@ function ListCard(props) {
                 autoComplete="Top 5 List Name"
                 className='list-card'
                 onKeyPress={handleKeyPress}
-                onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
                 InputProps={{ style: { fontSize: 48 } }}
                 InputLabelProps={{ style: { fontSize: 24 } }}

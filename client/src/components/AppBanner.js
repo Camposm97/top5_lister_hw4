@@ -33,7 +33,9 @@ export default function AppBanner() {
     }
 
     const handleTop5L = () => {
-        store.closeCurrentList()
+        if (!store.isListNameEditActive) {
+            store.closeCurrentList()
+        }
     }
 
     const menuId = 'primary-search-account-menu';
@@ -52,7 +54,7 @@ export default function AppBanner() {
             }}
             open={isMenuOpen}
             onClose={handleMenuClose}
-        >
+        >  
             <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
             <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
         </Menu>
@@ -124,9 +126,7 @@ export default function AppBanner() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            {
-                menu
-            }
+            {menu}
         </Box>
     );
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Button from '@mui/material/Button';
+import { FormControlLabel, Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -12,14 +13,11 @@ import Container from '@mui/material/Container';
 import { useState, useContext } from 'react';
 import AuthContext from '../auth';
 import Copyright from './Copyright'
-import { GlobalStoreContext } from '../store'
 
 import ErrorDialog from './ErrorDialog'
 
 export default function SignIn() {
   const { auth } = useContext(AuthContext)
-  const { store } = useContext(GlobalStoreContext)
-
   const [errMsg, setErrMsg] = useState('');
   const [showAlert, setShowAlert] = useState(false)
 
@@ -30,11 +28,12 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const rememberMe = formData.get('remember_me') === 'on' ? true : false
 
     auth.loginUser({
       email: formData.get('email'),
       password: formData.get('password'),
-    }, store).then(value => {
+    }, rememberMe).then(value => {
       if (value) {
         setErrMsg(value)
         setShowAlert(true)
@@ -84,6 +83,14 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+          />
+          <FormControlLabel
+            name='remember_me'
+            control={
+              <Checkbox
+                color="primary" />
+            }
+            label="Remember me"
           />
           <Button
             type="submit"

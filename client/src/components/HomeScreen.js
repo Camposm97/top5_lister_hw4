@@ -24,19 +24,19 @@ const HomeScreen = () => {
     }
     let listCard = "";
     if (store) {
-        listCard = 
+        listCard =
             <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
-            {
-                store.idNamePairs.map((pair) => (
-                    <ListCard
-                        key={pair._id}
-                        idNamePair={pair}
-                        selected={false}
-                        setShowAlertCallback={setShowAlert}
-                        setListNameCallback={setListName}
-                    />
-                ))
-            }
+                {
+                    store.idNamePairs.map((pair) => (
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            selected={false}
+                            setShowAlertCallback={setShowAlert}
+                            setListNameCallback={setListName}
+                        />
+                    ))
+                }
             </List>;
     }
     return (
@@ -47,14 +47,15 @@ const HomeScreen = () => {
                 setShowAlertCallback={setShowAlert}
             />
             <div id="list-selector-heading">
-            <Fab 
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab>
+                <Fab
+                    disabled={store.isListNameEditActive}
+                    color="primary"
+                    aria-label="add"
+                    id="add-list-button"
+                    onClick={handleCreateNewList}
+                >
+                    <AddIcon />
+                </Fab>
                 <Typography variant="h2">Your Lists</Typography>
             </div>
             <div id="list-selector-list">

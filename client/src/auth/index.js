@@ -38,7 +38,6 @@ function AuthContextProvider(props) {
                 });
             }
             case AuthActionType.SET_LOGGED_IN: {
-                setCookie('loggedIn', true, 2)
                 return setAuth({
                     user: payload.user,
                     loggedIn: true
@@ -62,7 +61,7 @@ function AuthContextProvider(props) {
         }
     }
 
-    auth.loginUser = async function (payload, store) {
+    auth.loginUser = async function (payload, rememberMe) {
         try {
             const res = await api.loginUser(payload)
             if (res.status === 200) {
@@ -74,13 +73,16 @@ function AuthContextProvider(props) {
                         loggedIn: true
                     }
                 })
+                if (rememberMe) {
+                    setCookie('loggedIn', true, 2)
+                }
             }
             return ''
         } catch (err) {
             if (err.response.status === 400) {
                 return err.response.data.errorMessage
             }
-            return null;
+            return 'I\' not sure what happened...'
         }
     }
 

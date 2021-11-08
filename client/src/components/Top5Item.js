@@ -31,10 +31,12 @@ function Top5Item(props) {
 
     function handleKeyPress(event) {
         if (event.code === 'Enter') {
-            let id = event.target.id;
+            let id = event.target.id
             let index = parseInt(id.slice(-1)) - 1
-            console.log('i=' + index)
             let newText = event.target.value
+            if (newText === '') {
+                newText = '?'
+            }
             toggleEdit()
             store.addUpdateItemTransaction(index, newText);
         }
@@ -46,11 +48,11 @@ function Top5Item(props) {
 
     function handleDragOver(event) {
         event.preventDefault();
+        setDraggedTo(true);
     }
 
     function handleDragEnter(event) {
         event.preventDefault();
-        setDraggedTo(true);
     }
 
     function handleDragLeave(event) {
@@ -104,7 +106,7 @@ function Top5Item(props) {
             }}
         >
             <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit}>
+                <IconButton onClick={handleToggleEdit} disabled={store.isItemEditActive}>
                     <EditIcon style={{ fontSize: '48pt' }} />
                 </IconButton>
             </Box>
@@ -114,7 +116,6 @@ function Top5Item(props) {
     if (editActive) {
         cardElement =
             <TextField
-                variant='outlined'
                 required
                 fullWidth
                 id={'item-' + (index + 1)}
@@ -128,6 +129,7 @@ function Top5Item(props) {
                 InputProps={{ style: { fontSize: 48 } }}
                 InputLabelProps={{ style: { fontSize: 24 } }}
                 autoFocus
+                
             />
     }
 
